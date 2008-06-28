@@ -6,6 +6,7 @@ require 'time'
 
 # stdlib
 require 'timeout'
+require 'logger'
 
 # third party
 require 'rubygems'
@@ -28,11 +29,18 @@ require 'grit/index'
 require 'grit/remote'
 
 module Grit
-  class << self
-    attr_accessor :debug
-  end
   
+  class << self
+    # Set +debug+ to true to log all git calls and responses
+    attr_accessor :debug
+    # The standard +logger+ for debugging git calls - this defaults to a plain STDOUT logger
+    attr_accessor :logger
+    def log(str)
+      logger.debug { str }
+    end
+  end
   self.debug = false
+  @logger ||= ::Logger.new(STDOUT)
   
   VERSION = '0.8.1'
 end
